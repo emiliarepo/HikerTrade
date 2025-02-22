@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HikerTrade", "HikerTrade\HikerTrade.csproj", "{64CEC0E9-115B-4CA1-B52C-5D172DBC6028}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HikerTrade.Tests", "HikerTrade.Tests\HikerTrade.Tests.csproj", "{4F87C4EE-886B-4A28-B962-186893D7351B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{64CEC0E9-115B-4CA1-B52C-5D172DBC6028}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64CEC0E9-115B-4CA1-B52C-5D172DBC6028}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64CEC0E9-115B-4CA1-B52C-5D172DBC6028}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64CEC0E9-115B-4CA1-B52C-5D172DBC6028}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F87C4EE-886B-4A28-B962-186893D7351B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F87C4EE-886B-4A28-B962-186893D7351B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F87C4EE-886B-4A28-B962-186893D7351B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F87C4EE-886B-4A28-B962-186893D7351B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
