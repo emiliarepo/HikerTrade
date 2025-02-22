@@ -26,8 +26,8 @@ public class InMemoryHikerRepository : IHikerRepository
         if (_hikers.ContainsKey(hiker.Id)) _hikers[hiker.Id] = hiker;
     }
 
-    public void DeleteHiker(Guid id)
+    public void DeleteHiker(Hiker hiker)
     {
-        if (_hikers.ContainsKey(id)) _hikers.Remove(id);
+        if (_hikers.ContainsKey(hiker.Id)) _hikers.Remove(hiker.Id);
     }
 }

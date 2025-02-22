@@ -24,13 +24,13 @@ public class TradeTests
         repository.AddHiker(hiker2);
 
         // Act
-        tradeService.AttemptTrade(hiker1.Id, hiker2.Id);
+        tradeService.AttemptItemSwap(hiker1.Id, hiker2.Id);
 
         // Assert
         Assert.Contains(hiker2.Inventory, i => i.Type == ItemType.Food);
         Assert.Contains(hiker1.Inventory, i => i.Type == ItemType.Water);
     }
-    
+
     [Fact]
     public void Injured_Hiker_Cant_Trade()
     {
@@ -48,9 +48,9 @@ public class TradeTests
         repository.AddHiker(hiker2);
 
         // Act & Assert
-        Assert.Throws<TradeService.TradeException>(() => tradeService.AttemptTrade(hiker1.Id, hiker2.Id));
+        Assert.Throws<TradeService.TradeException>(() => tradeService.AttemptItemSwap(hiker1.Id, hiker2.Id));
     }
-    
+
     [Fact]
     public void Cant_Trade_Different_Amounts()
     {
@@ -68,6 +68,6 @@ public class TradeTests
         repository.AddHiker(hiker2);
 
         // Act & Assert
-        Assert.Throws<TradeService.TradeException>(() => tradeService.AttemptTrade(hiker1.Id, hiker2.Id));
+        Assert.Throws<TradeService.TradeException>(() => tradeService.AttemptItemSwap(hiker1.Id, hiker2.Id));
     }
 }

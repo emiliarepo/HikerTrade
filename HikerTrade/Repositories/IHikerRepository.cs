@@ -10,5 +10,5 @@ public interface IHikerRepository
     List<Hiker> GetAllHikers();
     void UpdateHiker(Hiker hiker);
 
-    void DeleteHiker(Guid id);
+    void DeleteHiker(Hiker hiker);
 }
