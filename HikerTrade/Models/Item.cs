@@ -1,6 +1,6 @@
 using HikerTrade.Enums;
 
-namespace HikerTrade.Models.Items;
+namespace HikerTrade.Models;
 
 public class Item(ItemType itemType, int quantity)
 {

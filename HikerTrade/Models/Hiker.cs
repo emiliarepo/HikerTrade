@@ -1,5 +1,4 @@
 using HikerTrade.Enums;
-using HikerTrade.Models.Items;
 
 namespace HikerTrade.Models;
 

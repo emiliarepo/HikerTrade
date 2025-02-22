@@ -1,6 +1,5 @@
 using HikerTrade.Enums;
 using HikerTrade.Models;
-using HikerTrade.Models.Items;
 using HikerTrade.Repositories;
 
 namespace HikerTrade.Services;
