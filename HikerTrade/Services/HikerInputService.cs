@@ -21,15 +21,15 @@ public class HikerInputService(IHikerRepository hikerRepository) : IHikerInputSe
         var latitude = Prompt.Input<double>("Last location latitude", validators: [Validators.Required()]);
         var isInjured = Prompt.Confirm("Is the hiker injured?");
 
-        Inventory inventory = new();
+        List<Item> items = new();
         foreach (var item in Enum.GetValues<ItemType>())
         {
             var quantity = Prompt.Input<int>($"Enter amount of {item} ({(int)item} pts each)",
                 validators: [Validators.Required()]);
-            inventory.AddItem(item, quantity);
+            items.Add(new Item(item, quantity));
         }
 
-        var hiker = new Hiker(name, age, gender, new Coordinates(longitude, latitude), isInjured, inventory);
+        var hiker = new Hiker(name, age, gender, new Coordinates(longitude, latitude), isInjured, new Inventory(items));
         hikerRepository.AddHiker(hiker);
         return hiker.Id;
     }

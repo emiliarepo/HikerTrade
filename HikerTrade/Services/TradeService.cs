@@ -11,6 +11,8 @@ public interface ITradeService
 
 public class TradeService(IHikerRepository hikerRepository) : ITradeService
 {
+    private readonly IHikerInfoService _hikerInfoService = new HikerInfoService(hikerRepository);
+
     public void AttemptItemSwap(Guid hiker1Id, Guid hiker2Id)
     {
         var hiker1 = hikerRepository.GetHiker(hiker1Id) ??
@@ -30,10 +32,14 @@ public class TradeService(IHikerRepository hikerRepository) : ITradeService
                      throw new TradeException($"Hiker 2 with id {hiker2Id} not found");
 
         ValidateTrade(hiker1, hiker1TradeInventory, hiker2, hiker2TradeInventory);
-        PerformItemTrade(hiker1, hiker1TradeInventory, hiker2, hiker2TradeInventory);
 
-        hikerRepository.UpdateHiker(hiker1);
-        hikerRepository.UpdateHiker(hiker2);
+        var hiker1Inventory = hiker1.Inventory.AddItems(hiker2TradeInventory.GetItems())
+            .RemoveItems(hiker1TradeInventory.GetItems());
+        var hiker2Inventory = hiker2.Inventory.AddItems(hiker1TradeInventory.GetItems())
+            .RemoveItems(hiker2TradeInventory.GetItems());
+
+        _hikerInfoService.UpdateInventory(hiker1, hiker1Inventory);
+        _hikerInfoService.UpdateInventory(hiker2, hiker2Inventory);
     }
 
     private void ValidateTrade(Hiker hiker1, Inventory hiker1TradeInventory, Hiker hiker2,
@@ -60,27 +66,11 @@ public class TradeService(IHikerRepository hikerRepository) : ITradeService
     private void ValidateCanAfford(Hiker hiker, Inventory inventory)
     {
         var hasSufficientItems = inventory.GetItems()
-            .TrueForAll(item => item.Quantity <= hiker.Inventory.GetItemAmount(item.Type));
+            .All(item => item.Quantity <= hiker.Inventory.GetItemAmount(item.Type));
 
         if (!hasSufficientItems)
             throw new TradeException(
                 $"Trade between {hiker.Name} and another hiker: Not possible, {hiker.Name} has insufficient items.");
-    }
-
-    private void PerformItemTrade(Hiker hiker1, Inventory hiker1TradeInventory, Hiker hiker2,
-        Inventory hiker2TradeInventory)
-    {
-        ExchangeItems(hiker1, hiker2, hiker1TradeInventory);
-        ExchangeItems(hiker2, hiker1, hiker2TradeInventory);
-    }
-
-    private void ExchangeItems(Hiker giver, Hiker receiver, Inventory inventory)
-    {
-        foreach (var item in inventory.GetItems())
-        {
-            receiver.Inventory.AddItem(item.Type, item.Quantity);
-            giver.Inventory.RemoveItem(item.Type, item.Quantity);
-        }
     }
 
     public class TradeException(string message) : Exception(message);

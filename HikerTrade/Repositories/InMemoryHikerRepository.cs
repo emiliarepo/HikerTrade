@@ -6,9 +6,10 @@ public class InMemoryHikerRepository : IHikerRepository
 {
     private readonly Dictionary<Guid, Hiker> _hikers = new();
 
-    public void AddHiker(Hiker hiker)
+    public Guid AddHiker(Hiker hiker)
     {
         _hikers[hiker.Id] = hiker;
+        return hiker.Id;
     }
 
     public Hiker? GetHiker(Guid id)

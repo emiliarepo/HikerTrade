@@ -1,48 +1,59 @@
+using System.Collections.Immutable;
 using HikerTrade.Enums;
 
 namespace HikerTrade.Models;
 
-public class Inventory
+public class Inventory(IEnumerable<Item> items)
 {
-    private readonly List<Item> _items = new();
+    private readonly ImmutableList<Item> _items = items.Where(item => item.Quantity > 0).ToImmutableList();
 
-    public Inventory()
+    public Inventory AddItems(IEnumerable<Item> itemsToAdd)
     {
-    }
+        var items = _items.ToBuilder();
 
-    public Inventory(List<Item> items)
-    {
-        foreach (var item in items) AddItem(item.Type, item.Quantity);
-    }
-
-    public void AddItem(ItemType itemType, int quantity)
-    {
-        var existingItem = _items.FirstOrDefault(item => item.Type == itemType);
-        if (existingItem != null)
-            existingItem.IncreaseQuantity(quantity);
-        else
-            _items.Add(new Item(itemType, quantity));
-    }
-
-    public void RemoveItem(ItemType itemType, int quantity)
-    {
-        var existingItem = _items.FirstOrDefault(item => item.Type == itemType);
-        if (existingItem != null)
+        foreach (var item in itemsToAdd)
         {
-            existingItem.DecreaseQuantity(quantity);
-            if (existingItem.Quantity <= 0) _items.Remove(existingItem);
+            var existingItem = items.FirstOrDefault(i => i.Type == item.Type);
+
+            if (existingItem != null)
+            {
+                items.Remove(existingItem);
+                items.Add(new Item(item.Type, item.Quantity + existingItem.Quantity));
+            }
+            else
+            {
+                items.Add(new Item(item.Type, item.Quantity));
+            }
         }
+
+        return new Inventory(items);
+    }
+
+    public Inventory RemoveItems(IEnumerable<Item> itemsToRemove)
+    {
+        var items = _items.ToBuilder();
+
+        foreach (var item in itemsToRemove)
+        {
+            var existingItem = items.FirstOrDefault(i => i.Type == item.Type);
+
+            if (existingItem == null) continue;
+            items.Remove(existingItem);
+            if (existingItem.Quantity > item.Quantity)
+                items.Add(new Item(item.Type, existingItem.Quantity - item.Quantity));
+        }
+
+        return new Inventory(items);
     }
 
     public int GetItemAmount(ItemType itemType)
     {
-        var item = _items.FirstOrDefault(i => i.Type == itemType);
-        return item?.Quantity ?? 0;
+        return _items.FirstOrDefault(i => i.Type == itemType)?.Quantity ?? 0;
     }
 
-    public List<Item> GetItems()
+    public IReadOnlyList<Item> GetItems()
     {
-        return _items.ToList();
+        return _items;
     }
 
     public int GetTotalPoints()
@@ -52,8 +63,6 @@ public class Inventory
 
     public override string ToString()
     {
-        if (_items.Count == 0)
-            return "No items";
-        return string.Join(", ", _items.Select(item => item.ToString()));
+        return _items.Count == 0 ? "No items" : string.Join(", ", _items);
     }
 }
