@@ -12,6 +12,7 @@ public interface ITradeService
 public class TradeService(IHikerRepository hikerRepository) : ITradeService
 {
     private readonly IHikerInfoService _hikerInfoService = new HikerInfoService(hikerRepository);
+    private readonly IInventoryService _inventoryService = new InventoryService();
 
     public void AttemptItemSwap(Guid hiker1Id, Guid hiker2Id)
     {
@@ -19,8 +20,8 @@ public class TradeService(IHikerRepository hikerRepository) : ITradeService
                      throw new TradeException($"Hiker 1 with id {hiker1Id} not found");
         var hiker2 = hikerRepository.GetHiker(hiker2Id) ??
                      throw new TradeException($"Hiker 2 with id {hiker2Id} not found");
-        AttemptTrade(hiker1Id, new Inventory(hiker1.Inventory.GetItems()), hiker2Id,
-            new Inventory(hiker2.Inventory.GetItems()));
+        AttemptTrade(hiker1Id, new Inventory(hiker1.Inventory.Items), hiker2Id,
+            new Inventory(hiker2.Inventory.Items));
     }
 
     public void AttemptTrade(Guid hiker1Id, Inventory hiker1TradeInventory, Guid hiker2Id,
@@ -33,10 +34,10 @@ public class TradeService(IHikerRepository hikerRepository) : ITradeService
 
         ValidateTrade(hiker1, hiker1TradeInventory, hiker2, hiker2TradeInventory);
 
-        var hiker1Inventory = hiker1.Inventory.AddItems(hiker2TradeInventory.GetItems())
-            .RemoveItems(hiker1TradeInventory.GetItems());
-        var hiker2Inventory = hiker2.Inventory.AddItems(hiker1TradeInventory.GetItems())
-            .RemoveItems(hiker2TradeInventory.GetItems());
+        var hiker1Inventory = _inventoryService.RemoveItems(
+            _inventoryService.AddItems(hiker1.Inventory, hiker2TradeInventory.Items), hiker1TradeInventory.Items);
+        var hiker2Inventory = _inventoryService.RemoveItems(
+            _inventoryService.AddItems(hiker2.Inventory, hiker1TradeInventory.Items), hiker2TradeInventory.Items);
 
         _hikerInfoService.UpdateInventory(hiker1, hiker1Inventory);
         _hikerInfoService.UpdateInventory(hiker2, hiker2Inventory);
@@ -65,7 +66,7 @@ public class TradeService(IHikerRepository hikerRepository) : ITradeService
 
     private void ValidateCanAfford(Hiker hiker, Inventory inventory)
     {
-        var hasSufficientItems = inventory.GetItems()
+        var hasSufficientItems = inventory.Items
             .All(item => item.Quantity <= hiker.Inventory.GetItemAmount(item.Type));
 
         if (!hasSufficientItems)

@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using HikerTrade.Enums;
 using HikerTrade.Models;
 using HikerTrade.Repositories;
@@ -29,7 +30,8 @@ public class HikerInputService(IHikerRepository hikerRepository) : IHikerInputSe
             items.Add(new Item(item, quantity));
         }
 
-        var hiker = new Hiker(name, age, gender, new Coordinates(longitude, latitude), isInjured, new Inventory(items));
+        var hiker = new Hiker(name, age, gender, new Coordinates(longitude, latitude), isInjured,
+            new Inventory(items.ToImmutableList()));
         hikerRepository.AddHiker(hiker);
         return hiker.Id;
     }
