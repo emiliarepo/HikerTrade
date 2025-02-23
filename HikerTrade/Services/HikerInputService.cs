@@ -31,7 +31,7 @@ public class HikerInputService(IHikerRepository hikerRepository) : IHikerInputSe
         }
 
         var hiker = new Hiker(name, age, gender, new Coordinates(longitude, latitude), isInjured,
-            new Inventory(items.ToImmutableList()));
+            new Inventory(items.Where(item => item.Quantity > 0).ToImmutableList()));
         hikerRepository.AddHiker(hiker);
         return hiker.Id;
     }
