@@ -12,9 +12,9 @@ internal static class Program
     private static void Main()
     {
         Console.WriteLine("--- Enter data for Hiker #1 ---");
-        Guid hiker1Id = HikerInputService.CreateHikerFromInput();
+        var hiker1Id = HikerInputService.CreateHikerFromInput();
         Console.WriteLine("\n--- Enter data for Hiker #2 ---");
-        Guid hiker2Id = HikerInputService.CreateHikerFromInput();
+        var hiker2Id = HikerInputService.CreateHikerFromInput();
 
         Console.WriteLine("\nHiker data before trade:");
         Console.WriteLine($"\n{HikerRepository.GetHiker(hiker1Id)}");
