@@ -6,4 +6,4 @@ Install .NET 9.0, install the dependencies, build and run the project.
 
 See it in action:
 
-https://github.com/user-attachments/assets/4ba819b7-831d-4652-b3c8-407bf648a11e
+https://github.com/user-attachments/assets/586057a7-2d0d-46ae-b299-47aecd838b6d
